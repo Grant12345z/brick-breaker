@@ -3,6 +3,9 @@ namespace SpriteKind {
     export const ball = SpriteKind.create()
     export const topWall = SpriteKind.create()
     export const Brick = SpriteKind.create()
+    export const hpBrick = SpriteKind.create()
+    export const ballBrick = SpriteKind.create()
+    export const sizeBrick = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.ball, SpriteKind.Brick, function (sprite, otherSprite) {
     otherSprite.destroy(effects.ashes, 200)
@@ -18,6 +21,47 @@ sprites.onOverlap(SpriteKind.ball, SpriteKind.topWall, function (sprite, otherSp
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     console.log(convertToText(numBricks))
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    if (otherSprite == heart) {
+        if (info.life() == 3) {
+            info.changeScoreBy(5)
+            otherSprite.destroy()
+        } else {
+            info.changeLifeBy(1)
+            otherSprite.destroy()
+        }
+    }
+})
+sprites.onOverlap(SpriteKind.ball, SpriteKind.sizeBrick, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.ashes, 200)
+    sprite.setVelocity(1 * sprite.vx, -1 * sprite.vy)
+    info.changeScoreBy(15)
+    numBricks += -1
+    sizeBall = sprites.createProjectileFromSprite(img`
+. 1 1 1 1 1 . 
+1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 
+1 1 1 1 1 1 1 
+. 1 1 1 1 1 . 
+`, otherSprite, 0, 50)
+})
+sprites.onOverlap(SpriteKind.ball, SpriteKind.hpBrick, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.ashes, 200)
+    sprite.setVelocity(1 * sprite.vx, -1 * sprite.vy)
+    info.changeScoreBy(15)
+    numBricks += -1
+    heart = sprites.createProjectileFromSprite(img`
+. 2 2 . 2 2 . 
+2 2 2 2 2 2 2 
+2 2 2 2 2 2 2 
+. 2 2 2 2 2 . 
+. . 2 2 2 . . 
+. . . 2 . . . 
+. . . . . . . 
+`, otherSprite, 0, 50)
 })
 sprites.onOverlap(SpriteKind.ball, SpriteKind.Player, function (sprite, otherSprite) {
     sprite.setVelocity((sprite.x - otherSprite.x) * 3, -1 * sprite.vy)
@@ -35,8 +79,8 @@ function buildSetBricks () {
     }
 }
 function createBrick (x: number, y: number) {
-    ranNum = Math.randomRange(0, 2)
-    if (ranNum == 0) {
+    ranNum = Math.randomRange(1, 12)
+    if (ranNum == 1) {
         brick2 = sprites.create(img`
 f f f f f f f f f f f f f f f f 
 f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
@@ -47,7 +91,29 @@ f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f
 f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
 f f f f f f f f f f f f f f f f 
 `, SpriteKind.Brick)
-    } else if (ranNum == 1) {
+    } else if (ranNum == 2) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 3) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f 2 2 2 2 2 2 2 2 2 2 2 2 2 2 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 4) {
         brick2 = sprites.create(img`
 f f f f f f f f f f f f f f f f 
 f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -58,7 +124,29 @@ f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f
 f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
 f f f f f f f f f f f f f f f f 
 `, SpriteKind.Brick)
-    } else {
+    } else if (ranNum == 5) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 6) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 7) {
         brick2 = sprites.create(img`
 f f f f f f f f f f f f f f f f 
 f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
@@ -69,12 +157,82 @@ f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f
 f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
 f f f f f f f f f f f f f f f f 
 `, SpriteKind.Brick)
+    } else if (ranNum == 8) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 9) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f 7 7 7 7 7 7 7 7 7 7 7 7 7 7 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.Brick)
+    } else if (ranNum == 10) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 1 1 1 1 2 2 1 1 2 2 1 1 1 1 f 
+f 1 1 1 2 2 2 2 2 2 2 2 1 1 1 f 
+f 1 1 1 2 2 2 2 2 2 2 2 1 1 1 f 
+f 1 1 1 1 2 2 2 2 2 2 1 1 1 1 f 
+f 1 1 1 1 1 2 2 2 2 1 1 1 1 1 f 
+f 1 1 1 1 1 1 2 2 1 1 1 1 1 1 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.hpBrick)
+    } else if (ranNum == 11) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 4 4 4 4 4 4 4 4 4 4 4 4 4 4 f 
+f 4 4 4 4 4 4 8 8 4 4 4 4 4 4 f 
+f 4 4 4 4 4 8 8 8 8 4 4 4 4 4 f 
+f 4 4 4 4 4 8 8 8 8 4 4 4 4 4 f 
+f 4 4 4 4 4 4 8 8 4 4 4 4 4 4 f 
+f 4 4 4 4 4 4 4 4 4 4 4 4 4 4 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.ballBrick)
+    } else if (ranNum == 12) {
+        brick2 = sprites.create(img`
+f f f f f f f f f f f f f f f f 
+f 8 8 8 8 8 1 1 1 1 8 8 8 8 8 f 
+f 8 8 8 8 1 1 1 1 1 1 8 8 8 8 f 
+f 8 8 8 8 1 1 1 1 1 1 8 8 8 8 f 
+f 8 8 8 8 1 1 1 1 1 1 8 8 8 8 f 
+f 8 8 8 8 1 1 1 1 1 1 8 8 8 8 f 
+f 8 8 8 8 8 1 1 1 1 8 8 8 8 8 f 
+f f f f f f f f f f f f f f f f 
+`, SpriteKind.sizeBrick)
     }
     brick2.setPosition(x, y)
     numBricks += 1
 }
+sprites.onOverlap(SpriteKind.ball, SpriteKind.ballBrick, function (sprite, otherSprite) {
+    otherSprite.destroy(effects.ashes, 200)
+    sprite.setVelocity(1 * sprite.vx, -1 * sprite.vy)
+    info.changeScoreBy(15)
+    numBricks += -1
+    extraBall = sprites.createProjectileFromSprite(img`
+. 8 8 . 
+8 8 8 8 
+8 8 8 8 
+. 8 8 . 
+`, otherSprite, 0, 50)
+})
+let extraBall: Sprite = null
 let brick2: Sprite = null
 let ranNum = 0
+let sizeBall: Sprite = null
+let heart: Sprite = null
 let col = 0
 let numBricks = 0
 let startBallVar = 0
